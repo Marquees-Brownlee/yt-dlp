@@ -5,7 +5,7 @@
 
 * Run `make doc`
 * Update Changelog.md and CONTRIBUTORS
-* Change "Merged with youtube-dl" version in Readme.md if needed
+* Change "Merged with ytdl" version in Readme.md if needed
 * Commit to master as `Release <version>`
 * Push to origin/release - build task will now run
 * Update version.py using devscripts\update-version.py
@@ -15,6 +15,49 @@
 * Update changelog in /releases
 
 -->
+
+
+### 2021.03.01
+* Allow specifying path in `--external-downloader`
+* Add option `--sleep-requests` to sleep b/w requests
+* Add option `--extractor-retries` to retry on known extractor errors
+* Extract comments only when needed
+* `--get-comments` doesn't imply `--write-info-json` if `-J`, `-j` or `--print-json` are used
+* Fix `get_executable_path` by [shirt](https://github.com/shirt-dev)
+* [youtube] Retry on more known errors than just HTTP-5xx
+* [youtube] Fix inconsistent `webpage_url`
+* [tennistv] Fix format sorting
+* [bilibiliaudio] Recognize the file as audio-only
+* [hrfensehen] Fix wrong import
+* [viki] Fix viki play pass authentication by [RobinD42](https://github.com/RobinD42)
+* [readthedocs] Improvements by [shirt](https://github.com/shirt-dev)
+* [hls] Fix bug with m3u8 format extraction
+* [hls] Enable `--hls-use-mpegts` by default when downloading live-streams
+* [embedthumbnail] Fix bug with deleting original thumbnail
+* [build] Fix completion paths, zsh pip completion install by [hseg](https://github.com/hseg)
+* [ci] Disable download tests unless specifically invoked
+* Cleanup some code and fix typos
+
+
+### 2021.02.24
+* Moved project to an organization [yt-dlp](https://github.com/yt-dlp)
+* **Completely changed project name to yt-dlp** by [Pccode66](https://github.com/Pccode66) and [pukkandan](https://github.com/pukkandan)
+    * Also, `youtube-dlc` config files are no longer loaded
+* **Merge youtube-dl:** Upto [commit/4460329](https://github.com/ytdl-org/youtube-dl/commit/44603290e5002153f3ebad6230cc73aef42cc2cd) (except tmz, gedi)
+* [Readthedocs](https://yt-dlp.readthedocs.io) support by [shirt](https://github.com/shirt-dev)
+* [youtube] Show if video was a live stream in info (`was_live`)
+* [Zee5] Add new extractor by [Ashish](https://github.com/Ashish) and [pukkandan](https://github.com/pukkandan)
+* [jwplatform] Add support for `hyland.com`
+* [tennistv] Fix extractor
+* [hls] Support media initialization by [shirt](https://github.com/shirt-dev)
+* [hls] Added options `--hls-split-discontinuity` to better support media discontinuity by [shirt](https://github.com/shirt-dev)
+* [ffmpeg] Allow passing custom arguments before -i using `--ppa "ffmpeg_i1:ARGS"` syntax
+* Fix `--windows-filenames` removing `/` from UNIX paths
+* [hls] Show warning if pycryptodome is not found
+* [documentation] Improvements
+    * Fix documentation of `Extractor Options`
+    * Document `all` in format selection
+    * Document `playable_in_embed` in output templates
 
 
 ### 2021.02.19
@@ -141,12 +184,12 @@
 
 ### 2021.01.24
 * **Merge youtube-dl:** Upto [2021.01.24](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
-* Plugin support ([documentation](https://github.com/pukkandan/yt-dlp#plugins))
+* Plugin support ([documentation](https://github.com/yt-dlp/yt-dlp#plugins))
 * **Multiple paths**: New option `-P`/`--paths` to give different paths for different types of files
-    * The syntax is `-P "type:path" -P "type:path"` ([documentation](https://github.com/pukkandan/yt-dlp#:~:text=-P,%20--paths%20TYPE:PATH))
+    * The syntax is `-P "type:path" -P "type:path"` ([documentation](https://github.com/yt-dlp/yt-dlp#:~:text=-P,%20--paths%20TYPE:PATH))
     * Valid types are: home, temp, description, annotation, subtitle, infojson, thumbnail
-    * Additionally, configuration file is taken from home directory or current directory ([documentation](https://github.com/pukkandan/yt-dlp#:~:text=Home%20Configuration))
-* Allow passing different arguments to different external downloaders ([documentation](https://github.com/pukkandan/yt-dlp#:~:text=--downloader-args%20NAME:ARGS))
+    * Additionally, configuration file is taken from home directory or current directory ([documentation](https://github.com/yt-dlp/yt-dlp#:~:text=Home%20Configuration))
+* Allow passing different arguments to different external downloaders ([documentation](https://github.com/yt-dlp/yt-dlp#:~:text=--downloader-args%20NAME:ARGS))
 * [mildom] Add extractor by [nao20010128nao](https://github.com/nao20010128nao)
 * Warn when using old style `--external-downloader-args` and `--post-processor-args`
 * Fix `--no-overwrite` when using `--write-link`
@@ -172,7 +215,7 @@
 * **Merge youtube-dl:** Upto [2021.01.16](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
 * **Configuration files:**
     * Portable configuration file: `./yt-dlp.conf`
-    * Allow the configuration files to be named `yt-dlp` instead of `youtube-dlc`. See [this](https://github.com/pukkandan/yt-dlp#configuration) for details
+    * Allow the configuration files to be named `yt-dlp` instead of `youtube-dlc`. See [this](https://github.com/yt-dlp/yt-dlp#configuration) for details
 * Add PyPI release
 
 
@@ -181,7 +224,7 @@
 * [roosterteeth.com] Fix for bonus episodes by [Zocker1999NET](https://github.com/Zocker1999NET)
 * [tiktok] Fix for when share_info is empty
 * [EmbedThumbnail] Fix bug due to incorrect function name
-* [documentation] Changed sponskrub links to point to [pukkandan/sponskrub](https://github.com/pukkandan/SponSkrub) since I am now providing both linux and windows releases
+* [documentation] Changed sponskrub links to point to [yt-dlp/SponSkrub](https://github.com/yt-dlp/SponSkrub) since I am now providing both linux and windows releases
 * [documentation] Change all links to correctly point to new fork URL
 * [documentation] Fixes typos
 
@@ -256,7 +299,7 @@
     * Added `--video-multistreams`, `--no-video-multistreams`, `--audio-multistreams`, `--no-audio-multistreams`
     * Added `b`,`w`,`v`,`a` as alias for `best`, `worst`, `video` and `audio` respectively
 * **Shortcut Options:** Added `--write-link`, `--write-url-link`, `--write-webloc-link`, `--write-desktop-link` by [h-h-h-h](https://github.com/h-h-h-h) - See [Internet Shortcut Options](README.md#internet-shortcut-options) for details
-* **Sponskrub integration:** Added `--sponskrub`, `--sponskrub-cut`, `--sponskrub-force`, `--sponskrub-location`, `--sponskrub-args` - See [SponSkrub Options](README.md#sponskrub-options-sponsorblock) for details
+* **Sponskrub integration:** Added `--sponskrub`, `--sponskrub-cut`, `--sponskrub-force`, `--sponskrub-location`, `--sponskrub-args` - See [SponSkrub Options](README.md#sponskrub-sponsorblock-options) for details
 * Added `--force-download-archive` (`--force-write-archive`) by [h-h-h-h](https://github.com/h-h-h-h)
 * Added `--list-formats-as-table`,  `--list-formats-old`
 * **Negative Options:** Makes it possible to negate most boolean options by adding a `no-` to the switch. Usefull when you want to reverse an option that is defined in a config file
