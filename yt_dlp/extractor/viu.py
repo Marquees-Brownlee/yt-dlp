@@ -8,6 +8,8 @@ from ..compat import (
     compat_kwargs,
     compat_str,
     compat_urlparse,
+    compat_urllib_parse,
+    compat_urllib_parse_urlparse,
     compat_urllib_request,
 )
 from ..utils import (
@@ -366,14 +368,14 @@ class ViuOTTIE(InfoExtractor):
 
             # by pass preview duration limit
             if duration_limit:
-                temp = compat_urlparse.urlparse(stream_url)
+                temp = compat_urllib_parse_urlparse(stream_url)
                 query = dict(compat_urlparse.parse_qsl(temp.query, keep_blank_values=True))
                 time_duration = int_or_none(video_data.get('time_duration'))
                 query.update({
                     'duration': time_duration if time_duration > 0 else '9999999',
                     'duration_start': '0',
                 })
-                stream_url = temp._replace(query=compat_urlparse.urlencode(query)).geturl()
+                stream_url = temp._replace(query=compat_urllib_parse.urlencode(query)).geturl()
 
             formats.append({
                 'format_id': vid_format,
