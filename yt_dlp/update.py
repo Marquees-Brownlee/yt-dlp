@@ -49,11 +49,15 @@ def update_self(to_screen, verbose, opener):
                 h.update(mv[:n])
         return h.hexdigest()
 
-    to_screen('Current Build Hash %s' % calc_sha256sum(sys.executable))
-
     if not isinstance(globals().get('__loader__'), zipimporter) and not hasattr(sys, 'frozen'):
         to_screen('It looks like you installed yt-dlp with a package manager, pip, setup.py or a tarball. Please use that to update.')
         return
+
+    # sys.executable is set to the full pathname of the exe-file for py2exe
+    # though symlinks are not followed so that we need to do this manually
+    # with help of realpath
+    filename = compat_realpath(sys.executable if hasattr(sys, 'frozen') else sys.argv[0])
+    to_screen('Current Build Hash %s' % calc_sha256sum(filename))
 
     # Download and check versions info
     try:
@@ -102,11 +106,6 @@ def update_self(to_screen, verbose, opener):
         return next(
             (i[1] for i in hashes if i[0] == 'yt-dlp%s' % label),
             None)
-
-    # sys.executable is set to the full pathname of the exe-file for py2exe
-    # though symlinks are not followed so that we need to do this manually
-    # with help of realpath
-    filename = compat_realpath(sys.executable if hasattr(sys, 'frozen') else sys.argv[0])
 
     if not os.access(filename, os.W_OK):
         to_screen('ERROR: no write permissions on %s' % filename)
@@ -198,28 +197,18 @@ def update_self(to_screen, verbose, opener):
             to_screen('Visit https://github.com/yt-dlp/yt-dlp/releases/latest')
             return
 
+        expected_sum = get_sha256sum('zip', py_ver)
+        if expected_sum and hashlib.sha256(newcontent).hexdigest() != expected_sum:
+            to_screen('ERROR: unable to verify the new zip')
+            to_screen('Visit https://github.com/yt-dlp/yt-dlp/releases/latest')
+            return
+
         try:
-            with open(filename + '.new', 'wb') as outf:
+            with open(filename, 'wb') as outf:
                 outf.write(newcontent)
         except (IOError, OSError):
             if verbose:
                 to_screen(encode_compat_str(traceback.format_exc()))
-            to_screen('ERROR: unable to write the new version')
-            return
-
-        expected_sum = get_sha256sum('zip', py_ver)
-        if expected_sum and calc_sha256sum(filename + '.new') != expected_sum:
-            to_screen('ERROR: unable to verify the new zip')
-            to_screen('Visit https://github.com/yt-dlp/yt-dlp/releases/latest')
-            try:
-                os.remove(filename + '.new')
-            except OSError:
-                to_screen('ERROR: unable to remove corrupt zip')
-            return
-
-        try:
-            os.rename(filename + '.new', filename)
-        except OSError:
             to_screen('ERROR: unable to overwrite current version')
             return
 
