@@ -9,6 +9,7 @@ zip/
 tmp/
 venv/
 completions/
+yt-dlp-master/
 
 # Misc
 *~
