@@ -8,8 +8,8 @@ from ..compat import (
     compat_kwargs,
     compat_str,
     compat_urlparse,
-    compat_urllib_parse,
     compat_urllib_parse_urlparse,
+    compat_urllib_parse_urlencode,
     compat_urllib_request,
 )
 from ..utils import (
@@ -375,7 +375,7 @@ class ViuOTTIE(InfoExtractor):
                     'duration': time_duration if time_duration > 0 else '9999999',
                     'duration_start': '0',
                 })
-                stream_url = temp._replace(query=compat_urllib_parse.urlencode(query)).geturl()
+                stream_url = temp._replace(query=compat_urllib_parse_urlencode(query)).geturl()
 
             formats.append({
                 'format_id': vid_format,
