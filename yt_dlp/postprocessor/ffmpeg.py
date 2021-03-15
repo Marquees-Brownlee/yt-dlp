@@ -10,6 +10,7 @@ import json
 
 from .common import AudioConversionError, PostProcessor
 
+from ..compat import compat_str
 from ..utils import (
     encodeArgument,
     encodeFilename,
@@ -234,25 +235,35 @@ class FFmpegPostProcessor(PostProcessor):
         return num, len(streams)
 
     def run_ffmpeg_multiple_files(self, input_paths, out_path, opts):
+        return self.real_run_ffmpeg(
+            [(path, []) for path in input_paths],
+            [(out_path, opts)])
+
+    def real_run_ffmpeg(self, input_path_opts, output_path_opts):
         self.check_version()
 
         oldest_mtime = min(
-            os.stat(encodeFilename(path)).st_mtime for path in input_paths)
+            os.stat(encodeFilename(path)).st_mtime for path, _ in input_path_opts)
 
         cmd = [encodeFilename(self.executable, True), encodeArgument('-y')]
         # avconv does not have repeat option
         if self.basename == 'ffmpeg':
             cmd += [encodeArgument('-loglevel'), encodeArgument('repeat+info')]
 
-        def make_args(file, pre=[], post=[], *args, **kwargs):
-            args = pre + self._configuration_args(*args, **kwargs) + post
+        def make_args(file, args, name, number):
+            keys = ['_%s%d' % (name, number), '_%s' % name]
+            if name == 'o' and number == 1:
+                keys.append('')
+            args += self._configuration_args(self.basename, keys)
+            if name == 'i':
+                args.append('-i')
             return (
-                [encodeArgument(o) for o in args]
+                [encodeArgument(arg) for arg in args]
                 + [encodeFilename(self._ffmpeg_filename_argument(file), True)])
 
-        for i, path in enumerate(input_paths):
-            cmd += make_args(path, post=['-i'], exe='%s_i%d' % (self.basename, i + 1), use_default_arg=False)
-        cmd += make_args(out_path, pre=opts, exe=self.basename)
+        for arg_type, path_opts in (('i', input_path_opts), ('o', output_path_opts)):
+            cmd += [arg for i, o in enumerate(path_opts)
+                    for arg in make_args(o[0], o[1], arg_type, i + 1)]
 
         self.write_debug('ffmpeg command line: %s' % shell_quote(cmd))
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
@@ -262,7 +273,8 @@ class FFmpegPostProcessor(PostProcessor):
             if self.get_param('verbose', False):
                 self.report_error(stderr)
             raise FFmpegPostProcessorError(stderr.split('\n')[-1])
-        self.try_utime(out_path, oldest_mtime, oldest_mtime)
+        for out_path, _ in output_path_opts:
+            self.try_utime(out_path, oldest_mtime, oldest_mtime)
         return stderr.decode('utf-8', 'replace')
 
     def run_ffmpeg(self, path, out_path, opts):
@@ -758,3 +770,40 @@ class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
                 }
 
         return sub_filenames, info
+
+
+class FFmpegSplitChaptersPP(FFmpegPostProcessor):
+
+    def _prepare_filename(self, number, chapter, info):
+        info = info.copy()
+        info.update({
+            'section_number': number,
+            'section_title': chapter.get('title'),
+            'section_start': chapter.get('start_time'),
+            'section_end': chapter.get('end_time'),
+        })
+        return self._downloader.prepare_filename(info, 'chapter')
+
+    def _ffmpeg_args_for_chapter(self, number, chapter, info):
+        destination = self._prepare_filename(number, chapter, info)
+        if not self._downloader._ensure_dir_exists(encodeFilename(destination)):
+            return
+
+        chapter['_filename'] = destination
+        self.to_screen('Chapter %03d; Destination: %s' % (number, destination))
+        return (
+            destination,
+            ['-ss', compat_str(chapter['start_time']),
+             '-to', compat_str(chapter['end_time'])])
+
+    def run(self, info):
+        chapters = info.get('chapters') or []
+        if not chapters:
+            self.report_warning('There are no tracks to extract')
+            return [], info
+
+        self.to_screen('Splitting video by chapters; %d chapters found' % len(chapters))
+        for idx, chapter in enumerate(chapters):
+            destination, opts = self._ffmpeg_args_for_chapter(idx + 1, chapter, info)
+            self.real_run_ffmpeg([(info['filepath'], opts)], [(destination, ['-c', 'copy'])])
+        return [], info

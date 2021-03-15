@@ -17,6 +17,43 @@
 -->
 
 
+### 2021.03.15
+* **Split video by chapters**: using option `--split-chapters`
+    * The output file of the split files can be set with `-o`/`-P` using the prefix `chapter:`
+    * Additional keys `section_title`, `section_number`, `section_start`, `section_end` are available in the output template
+* **Parallel fragment downloads** by [shirt](https://github.com/shirt-dev)
+    * Use option `--concurrent-fragments` (`-N`) to set the number of threads (default 1)
+* Merge youtube-dl: Upto [commit/3be0980](https://github.com/ytdl-org/youtube-dl/commit/3be098010f667b14075e3dfad1e74e5e2becc8ea)
+* [zee5] Add Show Extractor by [Ashish](https://github.com/Ashish) and [pukkandan](https://github.com/pukkandan)
+* [rai] fix drm check [nixxo](https://github.com/nixxo)
+* [wimtv] Add extractor by [nixxo](https://github.com/nixxo)
+* [mtv] Add mtv.it and extract series metadata by [nixxo](https://github.com/nixxo)
+* [pluto.tv] Add extractor by [kevinoconnor7](https://github.com/kevinoconnor7)
+* [youtube] Rewrite comment extraction by [colethedj](https://github.com/colethedj)
+* [embedthumbnail] Set mtime correctly
+* Refactor some postprocessor/downloader code by [pukkandan](https://github.com/pukkandan) and [shirt](https://github.com/shirt-dev)
+
+
+### 2021.03.07
+* [youtube] Fix history, mixes, community pages and trending by [pukkandan](https://github.com/pukkandan) and [colethedj](https://github.com/colethedj)
+* [youtube] Fix private feeds/playlists on multi-channel accounts by [colethedj](https://github.com/colethedj)
+* [youtube] Extract alerts from continuation by [colethedj](https://github.com/colethedj)
+* [cbs] Add support for ParamountPlus by [shirt](https://github.com/shirt-dev)
+* [mxplayer] Rewrite extractor with show support by [pukkandan](https://github.com/pukkandan) and [Ashish](https://github.com/Ashish)
+* [gedi] Improvements from youtube-dl by [nixxo](https://github.com/nixxo)
+* [vimeo] Fix videos with password by [teesid](https://github.com/teesid)
+* [lbry] Support `lbry://` url by [nixxo](https://github.com/nixxo)
+* [bilibili] Change `Accept` header by [pukkandan](https://github.com/pukkandan) and [animelover1984](https://github.com/animelover1984)
+* [trovo] Pass origin header
+* [rai] Check for DRM by [nixxo](https://github.com/nixxo)
+* [downloader] Fix bug for `ffmpeg`/`httpie`
+* [update] Fix updater removing the executable bit on some UNIX distros
+* [update] Fix current build hash for UNIX
+* [documentation] Include wget/curl/aria2c install instructions for Unix by [Ashish](https://github.com/Ashish)
+* Fix some videos downloading with `m3u8` extension
+* Remove "fixup is ignored" warning when fixup wasn't passed by user
+
+
 ### 2021.03.03.2
 * [build] Fix bug
 
@@ -24,7 +61,7 @@
 ### 2021.03.03
 * [youtube] Use new browse API for continuation page extraction by [colethedj](https://github.com/colethedj) and [pukkandan](https://github.com/pukkandan)
 * Fix HLS playlist downloading by [shirt](https://github.com/shirt-dev)
-* **Merge youtube-dl:** Upto [2021.03.03](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.03.03)
+* Merge youtube-dl: Upto [2021.03.03](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.03.03)
 * [mtv] Fix extractor
 * [nick] Fix extractor by [DennyDai](https://github.com/DennyDai)
 * [mxplayer] Add new extractor by [codeasashu](https://github.com/codeasashu)
@@ -59,7 +96,7 @@
 * Moved project to an organization [yt-dlp](https://github.com/yt-dlp)
 * **Completely changed project name to yt-dlp** by [Pccode66](https://github.com/Pccode66) and [pukkandan](https://github.com/pukkandan)
     * Also, `youtube-dlc` config files are no longer loaded
-* **Merge youtube-dl:** Upto [commit/4460329](https://github.com/ytdl-org/youtube-dl/commit/44603290e5002153f3ebad6230cc73aef42cc2cd) (except tmz, gedi)
+* Merge youtube-dl: Upto [commit/4460329](https://github.com/ytdl-org/youtube-dl/commit/44603290e5002153f3ebad6230cc73aef42cc2cd) (except tmz, gedi)
 * [Readthedocs](https://yt-dlp.readthedocs.io) support by [shirt](https://github.com/shirt-dev)
 * [youtube] Show if video was a live stream in info (`was_live`)
 * [Zee5] Add new extractor by [Ashish](https://github.com/Ashish) and [pukkandan](https://github.com/pukkandan)
@@ -77,7 +114,7 @@
 
 
 ### 2021.02.19
-* **Merge youtube-dl:** Upto [commit/cf2dbec](https://github.com/ytdl-org/youtube-dl/commit/cf2dbec6301177a1fddf72862de05fa912d9869d) (except kakao)
+* Merge youtube-dl: Upto [commit/cf2dbec](https://github.com/ytdl-org/youtube-dl/commit/cf2dbec6301177a1fddf72862de05fa912d9869d) (except kakao)
 * [viki] Fix extractor
 * [niconico] Extract `channel` and `channel_id` by [kurumigi](https://github.com/kurumigi)
 * [youtube] Multiple page support for hashtag URLs
@@ -102,7 +139,7 @@
 
 
 ### 2021.02.15
-* **Merge youtube-dl:** Upto [2021.02.10](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.02.10) (except archive.org)
+* Merge youtube-dl: Upto [2021.02.10](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.02.10) (except archive.org)
 * [niconico] Improved extraction and support encrypted/SMILE movies by [kurumigi](https://github.com/kurumigi), [tsukumi](https://github.com/tsukumi), [bbepis](https://github.com/bbepis), [pukkandan](https://github.com/pukkandan)
 * Fix HLS AES-128 with multiple keys in external downloaders by [shirt](https://github.com/shirt-dev)
 * [youtube_live_chat] Fix by using POST API by [siikamiika](https://github.com/siikamiika)
@@ -145,7 +182,7 @@
 
 
 ### 2021.02.04
-* **Merge youtube-dl:** Upto [2021.02.04.1](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.02.04.1)
+* Merge youtube-dl: Upto [2021.02.04.1](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.02.04.1)
 * **Date/time formatting in output template:**
     * You can use [`strftime`](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) to format date/time fields. Example: `%(upload_date>%Y-%m-%d)s`
 * **Multiple output templates:**
@@ -199,7 +236,7 @@
 
 
 ### 2021.01.24
-* **Merge youtube-dl:** Upto [2021.01.24](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
+* Merge youtube-dl: Upto [2021.01.24](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
 * Plugin support ([documentation](https://github.com/yt-dlp/yt-dlp#plugins))
 * **Multiple paths**: New option `-P`/`--paths` to give different paths for different types of files
     * The syntax is `-P "type:path" -P "type:path"` ([documentation](https://github.com/yt-dlp/yt-dlp#:~:text=-P,%20--paths%20TYPE:PATH))
@@ -228,7 +265,7 @@
 
 
 ### 2021.01.16
-* **Merge youtube-dl:** Upto [2021.01.16](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
+* Merge youtube-dl: Upto [2021.01.16](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.16)
 * **Configuration files:**
     * Portable configuration file: `./yt-dlp.conf`
     * Allow the configuration files to be named `yt-dlp` instead of `youtube-dlc`. See [this](https://github.com/yt-dlp/yt-dlp#configuration) for details
@@ -274,8 +311,7 @@
 
 
 ### 2021.01.08
-* **Merge youtube-dl:** Upto [2021.01.08](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.08)
-    * Extractor stitcher ([1](https://github.com/ytdl-org/youtube-dl/commit/bb38a1215718cdf36d73ff0a7830a64cd9fa37cc), [2](https://github.com/ytdl-org/youtube-dl/commit/a563c97c5cddf55f8989ed7ea8314ef78e30107f)) have not been merged
+* Merge youtube-dl: Upto [2021.01.08](https://github.com/ytdl-org/youtube-dl/releases/tag/2021.01.08) except stitcher ([1](https://github.com/ytdl-org/youtube-dl/commit/bb38a1215718cdf36d73ff0a7830a64cd9fa37cc), [2](https://github.com/ytdl-org/youtube-dl/commit/a563c97c5cddf55f8989ed7ea8314ef78e30107f))
 * Moved changelog to seperate file
 
 
@@ -314,7 +350,7 @@
     * Changed video format sorting to show video only files and video+audio files together.
     * Added `--video-multistreams`, `--no-video-multistreams`, `--audio-multistreams`, `--no-audio-multistreams`
     * Added `b`,`w`,`v`,`a` as alias for `best`, `worst`, `video` and `audio` respectively
-* **Shortcut Options:** Added `--write-link`, `--write-url-link`, `--write-webloc-link`, `--write-desktop-link` by [h-h-h-h](https://github.com/h-h-h-h) - See [Internet Shortcut Options](README.md#internet-shortcut-options) for details
+* Shortcut Options: Added `--write-link`, `--write-url-link`, `--write-webloc-link`, `--write-desktop-link` by [h-h-h-h](https://github.com/h-h-h-h) - See [Internet Shortcut Options](README.md#internet-shortcut-options) for details
 * **Sponskrub integration:** Added `--sponskrub`, `--sponskrub-cut`, `--sponskrub-force`, `--sponskrub-location`, `--sponskrub-args` - See [SponSkrub Options](README.md#sponskrub-sponsorblock-options) for details
 * Added `--force-download-archive` (`--force-write-archive`) by [h-h-h-h](https://github.com/h-h-h-h)
 * Added `--list-formats-as-table`,  `--list-formats-old`
@@ -324,36 +360,38 @@
 * Relaxed validation for format filters so that any arbitrary field can be used
 * Fix for embedding thumbnail in mp3 by [pauldubois98](https://github.com/pauldubois98) ([ytdl-org/youtube-dl#21569](https://github.com/ytdl-org/youtube-dl/pull/21569))
 * Make Twitch Video ID output from Playlist and VOD extractor same. This is only a temporary fix
-* **Merge youtube-dl:** Upto [2021.01.03](https://github.com/ytdl-org/youtube-dl/commit/8e953dcbb10a1a42f4e12e4e132657cb0100a1f8) - See [blackjack4494/yt-dlc#280](https://github.com/blackjack4494/yt-dlc/pull/280) for details
+* Merge youtube-dl: Upto [2021.01.03](https://github.com/ytdl-org/youtube-dl/commit/8e953dcbb10a1a42f4e12e4e132657cb0100a1f8) - See [blackjack4494/yt-dlc#280](https://github.com/blackjack4494/yt-dlc/pull/280) for details
     * Extractors [tiktok](https://github.com/ytdl-org/youtube-dl/commit/fb626c05867deab04425bad0c0b16b55473841a2) and [hotstar](https://github.com/ytdl-org/youtube-dl/commit/bb38a1215718cdf36d73ff0a7830a64cd9fa37cc) have not been merged
 * Cleaned up the fork for public use
 
 
+**PS**: All uncredited changes above this point are authored by [pukkandan](https://github.com/pukkandan)
+
 ### Unreleased changes in [blackjack4494/yt-dlc](https://github.com/blackjack4494/yt-dlc)
-* Updated to youtube-dl release 2020.11.26
-* [youtube]
+* Updated to youtube-dl release 2020.11.26 by [pukkandan](https://github.com/pukkandan)
+* Youtube improvements by [pukkandan](https://github.com/pukkandan)
     * Implemented all Youtube Feeds (ytfav, ytwatchlater, ytsubs, ythistory, ytrec) and SearchURL
-    * Fix ytsearch not returning results sometimes due to promoted content
-    * Temporary fix for automatic captions - disable json3
     * Fix some improper Youtube URLs
     * Redirect channel home to /video
     * Print youtube's warning message
-    * Multiple pages are handled better for feeds
+    * Handle Multiple pages for feeds better
+* [youtube] Fix ytsearch not returning results sometimes due to promoted content by [colethedj](https://github.com/colethedj)
+* [youtube] Temporary fix for automatic captions - disable json3 by [blackjack4494](https://github.com/blackjack4494)
 * Add --break-on-existing by [gergesh](https://github.com/gergesh)
-* Pre-check video IDs in the archive before downloading
-* [bitwave.tv] New extractor
-* [Gedi] Add extractor
-* [Rcs] Add new extractor
-* [skyit] Add support for multiple Sky Italia website and removed old skyitalia extractor
-* [france.tv] Fix thumbnail URL
-* [ina] support mobile links
-* [instagram] Fix extractor
-* [itv] BTCC new pages' URL update (articles instead of races)
-* [SouthparkDe] Support for English URLs
-* [spreaker] fix SpreakerShowIE test URL
-* [Vlive] Fix playlist handling when downloading a channel
-* [generic] Detect embedded bitchute videos
-* [generic] Extract embedded youtube and twitter videos
-* [ffmpeg] Ensure all streams are copied
-* Fix for os.rename error when embedding thumbnail to video in a different drive
-* make_win.bat: don't use UPX to pack vcruntime140.dll
+* Pre-check video IDs in the archive before downloading by [pukkandan](https://github.com/pukkandan)
+* [bitwave.tv] New extractor by [lorpus](https://github.com/lorpus)
+* [Gedi] Add extractor by [nixxo](https://github.com/nixxo)
+* [Rcs] Add new extractor by [nixxo](https://github.com/nixxo)
+* [skyit] New skyitalia extractor by [nixxo](https://github.com/nixxo)
+* [france.tv] Fix thumbnail URL by [renalid](https://github.com/renalid)
+* [ina] support mobile links by [B0pol](https://github.com/B0pol)
+* [instagram] Fix thumbnail extractor by [nao20010128nao](https://github.com/nao20010128nao)
+* [SouthparkDe] Support for English URLs by [xypwn](https://github.com/xypwn)
+* [spreaker] fix SpreakerShowIE test URL by [pukkandan](https://github.com/pukkandan)
+* [Vlive] Fix playlist handling when downloading a channel by [kyuyeunk](https://github.com/kyuyeunk)
+* [tmz] Fix extractor by [diegorodriguezv](https://github.com/diegorodriguezv)
+* [generic] Detect embedded bitchute videos by [pukkandan](https://github.com/pukkandan)
+* [generic] Extract embedded youtube and twitter videos by [diegorodriguezv](https://github.com/diegorodriguezv)
+* [ffmpeg] Ensure all streams are copied by [pukkandan](https://github.com/pukkandan)
+* [embedthumbnail] Fix for os.rename error by [pukkandan](https://github.com/pukkandan)
+* make_win.bat: don't use UPX to pack vcruntime140.dll by [jbruchon](https://github.com/jbruchon)

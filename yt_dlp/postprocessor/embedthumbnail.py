@@ -85,6 +85,8 @@ class EmbedThumbnailPP(FFmpegPostProcessor):
             thumbnail_filename = thumbnail_jpg_filename
             thumbnail_ext = 'jpg'
 
+        mtime = os.stat(encodeFilename(filename)).st_mtime
+
         success = True
         if info['ext'] == 'mp3':
             options = [
@@ -139,7 +141,7 @@ class EmbedThumbnailPP(FFmpegPostProcessor):
                        encodeFilename(thumbnail_filename, True),
                        encodeArgument('-o'),
                        encodeFilename(temp_filename, True)]
-                cmd += [encodeArgument(o) for o in self._configuration_args(exe='AtomicParsley')]
+                cmd += [encodeArgument(o) for o in self._configuration_args('AtomicParsley')]
 
                 self.to_screen('Adding thumbnail to "%s"' % filename)
                 self.write_debug('AtomicParsley command line: %s' % shell_quote(cmd))
@@ -186,6 +188,8 @@ class EmbedThumbnailPP(FFmpegPostProcessor):
         if success and temp_filename != filename:
             os.remove(encodeFilename(filename))
             os.rename(encodeFilename(temp_filename), encodeFilename(filename))
+
+        self.try_utime(filename, mtime, mtime)
 
         files_to_delete = [thumbnail_filename]
         if self._already_have_thumbnail:

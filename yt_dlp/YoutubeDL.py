@@ -1171,6 +1171,9 @@ class YoutubeDL(object):
         else:
             raise Exception('Invalid result type: %s' % result_type)
 
+    def _ensure_dir_exists(self, path):
+        return make_dir(path, self.report_error)
+
     def __process_playlist(self, ie_result, download):
         # We process each entry in the playlist
         playlist = ie_result.get('title') or ie_result.get('id')
@@ -1187,12 +1190,9 @@ class YoutubeDL(object):
             }
             ie_copy.update(dict(ie_result))
 
-            def ensure_dir_exists(path):
-                return make_dir(path, self.report_error)
-
             if self.params.get('writeinfojson', False):
                 infofn = self.prepare_filename(ie_copy, 'pl_infojson')
-                if not ensure_dir_exists(encodeFilename(infofn)):
+                if not self._ensure_dir_exists(encodeFilename(infofn)):
                     return
                 if not self.params.get('overwrites', True) and os.path.exists(encodeFilename(infofn)):
                     self.to_screen('[info] Playlist metadata is already present')
@@ -1208,7 +1208,7 @@ class YoutubeDL(object):
 
             if self.params.get('writedescription', False):
                 descfn = self.prepare_filename(ie_copy, 'pl_description')
-                if not ensure_dir_exists(encodeFilename(descfn)):
+                if not self._ensure_dir_exists(encodeFilename(descfn)):
                     return
                 if not self.params.get('overwrites', True) and os.path.exists(encodeFilename(descfn)):
                     self.to_screen('[info] Playlist description is already present')
@@ -1794,14 +1794,18 @@ class YoutubeDL(object):
         if 'display_id' not in info_dict and 'id' in info_dict:
             info_dict['display_id'] = info_dict['id']
 
-        if info_dict.get('upload_date') is None and info_dict.get('timestamp') is not None:
-            # Working around out-of-range timestamp values (e.g. negative ones on Windows,
-            # see http://bugs.python.org/issue1646728)
-            try:
-                upload_date = datetime.datetime.utcfromtimestamp(info_dict['timestamp'])
-                info_dict['upload_date'] = upload_date.strftime('%Y%m%d')
-            except (ValueError, OverflowError, OSError):
-                pass
+        for ts_key, date_key in (
+                ('timestamp', 'upload_date'),
+                ('release_timestamp', 'release_date'),
+        ):
+            if info_dict.get(date_key) is None and info_dict.get(ts_key) is not None:
+                # Working around out-of-range timestamp values (e.g. negative ones on Windows,
+                # see http://bugs.python.org/issue1646728)
+                try:
+                    upload_date = datetime.datetime.utcfromtimestamp(info_dict[ts_key])
+                    info_dict[date_key] = upload_date.strftime('%Y%m%d')
+                except (ValueError, OverflowError, OSError):
+                    pass
 
         # Auto generate title fields corresponding to the *_number fields when missing
         # in order to always have clean titles. This is very common for TV series.
@@ -2089,17 +2093,14 @@ class YoutubeDL(object):
         if full_filename is None:
             return
 
-        def ensure_dir_exists(path):
-            return make_dir(path, self.report_error)
-
-        if not ensure_dir_exists(encodeFilename(full_filename)):
+        if not self._ensure_dir_exists(encodeFilename(full_filename)):
             return
-        if not ensure_dir_exists(encodeFilename(temp_filename)):
+        if not self._ensure_dir_exists(encodeFilename(temp_filename)):
             return
 
         if self.params.get('writedescription', False):
             descfn = self.prepare_filename(info_dict, 'description')
-            if not ensure_dir_exists(encodeFilename(descfn)):
+            if not self._ensure_dir_exists(encodeFilename(descfn)):
                 return
             if not self.params.get('overwrites', True) and os.path.exists(encodeFilename(descfn)):
                 self.to_screen('[info] Video description is already present')
@@ -2116,7 +2117,7 @@ class YoutubeDL(object):
 
         if self.params.get('writeannotations', False):
             annofn = self.prepare_filename(info_dict, 'annotation')
-            if not ensure_dir_exists(encodeFilename(annofn)):
+            if not self._ensure_dir_exists(encodeFilename(annofn)):
                 return
             if not self.params.get('overwrites', True) and os.path.exists(encodeFilename(annofn)):
                 self.to_screen('[info] Video annotations are already present')
@@ -2204,7 +2205,7 @@ class YoutubeDL(object):
 
         if self.params.get('writeinfojson', False):
             infofn = self.prepare_filename(info_dict, 'infojson')
-            if not ensure_dir_exists(encodeFilename(infofn)):
+            if not self._ensure_dir_exists(encodeFilename(infofn)):
                 return
             if not self.params.get('overwrites', True) and os.path.exists(encodeFilename(infofn)):
                 self.to_screen('[info] Video metadata is already present')
@@ -2360,7 +2361,7 @@ class YoutubeDL(object):
                             fname = prepend_extension(
                                 self.prepare_filename(new_info, 'temp'),
                                 'f%s' % f['format_id'], new_info['ext'])
-                            if not ensure_dir_exists(fname):
+                            if not self._ensure_dir_exists(fname):
                                 return
                             downloaded.append(fname)
                             partial_success, real_download = dl(fname, new_info)
@@ -2437,9 +2438,8 @@ class YoutubeDL(object):
                     else:
                         assert fixup_policy in ('ignore', 'never')
 
-                if (info_dict.get('protocol') == 'm3u8_native'
-                        or info_dict.get('protocol') == 'm3u8'
-                        and self.params.get('hls_prefer_native')):
+                if ('protocol' in info_dict
+                        and get_suitable_downloader(info_dict, self.params).__name__ == 'HlsFD'):
                     if fixup_policy == 'warn':
                         self.report_warning('%s: malformed AAC bitstream detected.' % (
                             info_dict['id']))

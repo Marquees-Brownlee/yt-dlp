@@ -347,8 +347,7 @@
  - **Gaskrank**
  - **Gazeta**
  - **GDCVault**
- - **Gedi**
- - **GediEmbeds**
+ - **GediDigital**
  - **generic**: Generic downloader that works on some sites
  - **Gfycat**
  - **GiantBomb**
@@ -562,6 +561,8 @@
  - **mtg**: MTG services
  - **mtv**
  - **mtv.de**
+ - **mtv.it**
+ - **mtv.it:programma**
  - **mtv:video**
  - **mtvjapan**
  - **mtvservices:embedded**
@@ -735,6 +736,7 @@
  - **Playwire**
  - **pluralsight**
  - **pluralsight:course**
+ - **PlutoTV**
  - **podomatic**
  - **Pokemon**
  - **PokemonWatch**
@@ -1172,6 +1174,7 @@
  - **Weibo**
  - **WeiboMobile**
  - **WeiqiTV**: WQTV
+ - **WimTV**
  - **Wistia**
  - **WistiaPlaylist**
  - **wnl**: npo.nl, ntr.nl, omroepwnl.nl, zapp.nl and npo3.nl
@@ -1242,6 +1245,7 @@
  - **ZDF**
  - **ZDFChannel**
  - **Zee5**
+ - **zee5:series**
  - **Zhihu**
  - **zingmp3**: mp3.zing.vn
  - **zoom**

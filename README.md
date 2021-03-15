@@ -57,7 +57,7 @@ The major new features from the latest release of [blackjack4494/yt-dlc](https:/
 
 * **[Format Sorting](#sorting-formats)**: The default format sorting options have been changed so that higher resolution and better codecs will be now preferred instead of simply using larger bitrate. Furthermore, you can now specify the sort order using `-S`. This allows for much easier format selection that what is possible by simply using `--format` ([examples](#format-selection-examples))
 
-* **Merged with youtube-dl v2021.03.03**: You get all the latest features and patches of [youtube-dl](https://github.com/ytdl-org/youtube-dl) in addition to all the features of [youtube-dlc](https://github.com/blackjack4494/yt-dlc)
+* **Merged with youtube-dl v2021.03.14**: You get all the latest features and patches of [youtube-dl](https://github.com/ytdl-org/youtube-dl) in addition to all the features of [youtube-dlc](https://github.com/blackjack4494/yt-dlc)
 
 * **Merged with animelover1984/youtube-dl**: You get most of the features and improvements from [animelover1984/youtube-dl](https://github.com/animelover1984/youtube-dl) including `--get-comments`, `BiliBiliSearch`, `BilibiliChannel`, Embedding thumbnail in mp4/ogg/opus, Playlist infojson etc. Note that the NicoNico improvements are not available. See [#31](https://github.com/yt-dlp/yt-dlp/pull/31) for details.
 
@@ -66,17 +66,19 @@ The major new features from the latest release of [blackjack4494/yt-dlc](https:/
     * Youtube search (`ytsearch:`, `ytsearchdate:`) along with Search URLs works correctly
     * Redirect channel's home URL automatically to `/video` to preserve the old behaviour
 
+* **Split video by chapters**: Videos can be split into multiple files based on chapters using `--split-chapters`
+
+* **Multithreaded fragment downloads**: Fragment downloads can be natively multi-threaded. Use `--concurrent-fragments` (`-N`) option to set the number of threads used
+
 * **Aria2c with HLS/DASH**: You can use aria2c as the external downloader for DASH(mpd) and HLS(m3u8) formats. No more slow ffmpeg/native downloads
 
-* **New extractors**: AnimeLab, Philo MSO, Rcs, Gedi, bitwave.tv, mildom, audius, zee5
+* **New extractors**: AnimeLab, Philo MSO, Rcs, Gedi, bitwave.tv, mildom, audius, zee5, mtv.it, wimtv, pluto.tv
 
 * **Fixed extractors**: archive.org, roosterteeth.com, skyit, instagram, itv, SouthparkDe, spreaker, Vlive, tiktok, akamai, ina, rumble, tennistv
 
 * **Plugin support**: Extractors can be loaded from an external file. See [plugins](#plugins) for details
 
-* **Multiple paths and output templates**: You can give different [output templates](#output-template) and download paths for different types of files. You can also set a temporary path where intermediary files are downloaded to. See [`--paths`](https://github.com/yt-dlp/yt-dlp/#:~:text=-P,%20--paths%20TYPE:PATH) for details
-
-<!-- Relative link doesn't work for "#:~:text=" -->
+* **Multiple paths and output templates**: You can give different [output templates](#output-template) and download paths for different types of files. You can also set a temporary path where intermediary files are downloaded to using `--paths` (`-P`)
 
 * **Portable Configuration**: Configuration files are automatically loaded from the home and root directories. See [configuration](#configuration) for details
 
@@ -102,6 +104,23 @@ You can install yt-dlp using one of the following methods:
 * Use [PyPI package](https://pypi.org/project/yt-dlp): `python -m pip install --upgrade yt-dlp`
 * Use pip+git: `python -m pip install --upgrade git+https://github.com/yt-dlp/yt-dlp.git@release`
 * Install master branch: `python -m pip install --upgrade git+https://github.com/yt-dlp/yt-dlp`
+
+UNIX users (Linux, macOS, BSD) can also install the [latest release](https://github.com/yt-dlp/yt-dlp/releases/latest) one of the following ways:
+
+```
+sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+```
+
+```
+sudo wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+```
+
+```
+sudo aria2c https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+```
 
 ### UPDATE
 Starting from version `2021.02.09`, you can use `yt-dlp -U` to update if you are using the provided release.
@@ -177,7 +196,7 @@ Then simply run `make`. You can also run `make yt-dlp` instead to compile only t
                                      only list them
     --no-flat-playlist               Extract the videos of a playlist
     --mark-watched                   Mark videos watched (YouTube only)
-    --no-mark-watched                Do not mark videos watched
+    --no-mark-watched                Do not mark videos watched (default)
     --no-colors                      Do not emit color codes in output
 
 ## Network Options:
@@ -280,6 +299,8 @@ Then simply run `make`. You can also run `make yt-dlp` instead to compile only t
     --no-include-ads                 Do not download advertisements (default)
 
 ## Download Options:
+    -N, --concurrent-fragments N     Number of fragments to download
+                                     concurrently (default is 1)
     -r, --limit-rate RATE            Maximum download rate in bytes per second
                                      (e.g. 50K or 4.2M)
     -R, --retries RETRIES            Number of retries (default is 10), or
@@ -624,11 +645,12 @@ Then simply run `make`. You can also run `make yt-dlp` instead to compile only t
                                      arguments to the specified executable only
                                      when being used by the specified
                                      postprocessor. Additionally, for
-                                     ffmpeg/ffprobe, a number can be appended to
-                                     the exe name seperated by "_i" to pass the
-                                     argument before the specified input file.
-                                     Eg: --ppa "Merger+ffmpeg_i1:-v quiet". You
-                                     can use this option multiple times to give
+                                     ffmpeg/ffprobe, "_i"/"_o" can be appended
+                                     to the prefix optionally followed by a
+                                     number to pass the argument before the
+                                     specified input/output file. Eg: --ppa
+                                     "Merger+ffmpeg_i1:-v quiet". You can use
+                                     this option multiple times to give
                                      different arguments to different
                                      postprocessors. (Alias: --ppa)
     -k, --keep-video                 Keep the intermediate video file on disk
@@ -674,6 +696,13 @@ Then simply run `make`. You can also run `make yt-dlp` instead to compile only t
                                      push {} /sdcard/Music/ && rm {}'
     --convert-subs FORMAT            Convert the subtitles to other format
                                      (currently supported: srt|ass|vtt|lrc)
+    --split-chapters                 Split video into multiple files based on
+                                     internal chapters. The "chapter:" prefix
+                                     can be used with "--paths" and "--output"
+                                     to set the output filename for the split
+                                     files. See "OUTPUT TEMPLATE" for details
+    --no-split-chapters              Do not split video based on chapters
+                                     (default)
 
 ## SponSkrub (SponsorBlock) Options:
 [SponSkrub](https://github.com/yt-dlp/SponSkrub) is a utility to
@@ -789,9 +818,9 @@ The `-o` option is used to indicate a template for the output file names while `
 
 **tl;dr:** [navigate me to examples](#output-template-examples).
 
-The basic usage of `-o` is not to set any template arguments when downloading a single file, like in `yt-dlp -o funny_video.flv "https://some/video"`. However, it may contain special sequences that will be replaced when downloading each video. The special sequences may be formatted according to [python string formatting operations](https://docs.python.org/2/library/stdtypes.html#string-formatting). For example, `%(NAME)s` or `%(NAME)05d`. To clarify, that is a percent symbol followed by a name in parentheses, followed by formatting operations. Date/time fields can also be formatted according to [strftime formatting](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) by specifying it inside the parantheses seperated from the field name using a `>`. For example, `%(duration>%H-%M-%S)s`.
+The basic usage of `-o` is not to set any template arguments when downloading a single file, like in `yt-dlp -o funny_video.flv "https://some/video"` (hard-coding file extension like this is not recommended). However, it may contain special sequences that will be replaced when downloading each video. The special sequences may be formatted according to [python string formatting operations](https://docs.python.org/2/library/stdtypes.html#string-formatting). For example, `%(NAME)s` or `%(NAME)05d`. To clarify, that is a percent symbol followed by a name in parentheses, followed by formatting operations. Date/time fields can also be formatted according to [strftime formatting](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) by specifying it inside the parantheses seperated from the field name using a `>`. For example, `%(duration>%H-%M-%S)s`.
 
-Additionally, you can set different output templates for the various metadata files seperately from the general output template by specifying the type of file followed by the template seperated by a colon ":". The different filetypes supported are `subtitle|thumbnail|description|annotation|infojson|pl_description|pl_infojson`. For example, `-o '%(title)s.%(ext)s' -o 'thumbnail:%(title)s\%(title)s.%(ext)s'`  will put the thumbnails in a folder with the same name as the video.
+Additionally, you can set different output templates for the various metadata files seperately from the general output template by specifying the type of file followed by the template seperated by a colon ":". The different filetypes supported are `subtitle`, `thumbnail`, `description`, `annotation`, `infojson`, `pl_description`, `pl_infojson`, `chapter`. For example, `-o '%(title)s.%(ext)s' -o 'thumbnail:%(title)s\%(title)s.%(ext)s'`  will put the thumbnails in a folder with the same name as the video.
 
 The available fields are:
 
@@ -800,6 +829,7 @@ The available fields are:
  - `url` (string): Video URL
  - `ext` (string): Video filename extension
  - `alt_title` (string): A secondary title of the video
+ - `description` (string): The description of the video
  - `display_id` (string): An alternative identifier for the video
  - `uploader` (string): Full name of the video uploader
  - `license` (string): License name the video is licensed under
@@ -881,6 +911,13 @@ Available for the media that is a track or a part of a music album:
  - `album_artist` (string): List of all artists appeared on the album
  - `disc_number` (numeric): Number of the disc or other physical medium the track belongs to
  - `release_year` (numeric): Year (YYYY) when the album was released
+
+Available when using `--split-chapters` for videos with internal chapters:
+
+ - `section_title` (string): Title of the chapter
+ - `section_number` (numeric): Number of the chapter within the file
+ - `section_start` (numeric): Start time of the chapter in seconds
+ - `section_end` (numeric): End time of the chapter in seconds
 
 Each aforementioned sequence when referenced in an output template will be replaced by the actual value corresponding to the sequence name. Note that some of the sequences are not guaranteed to be present since they depend on the metadata obtained by a particular extractor. Such sequences will be replaced with placeholder value provided with `--output-na-placeholder` (`NA` by default).
 

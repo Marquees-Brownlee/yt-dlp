@@ -732,6 +732,8 @@ from .mtv import (
     MTVServicesEmbeddedIE,
     MTVDEIE,
     MTVJapanIE,
+    MTVItaliaIE,
+    MTVItaliaProgrammaIE,
 )
 from .muenchentv import MuenchenTVIE
 from .mwave import MwaveIE, MwaveMeetGreetIE
@@ -951,6 +953,7 @@ from .plays import PlaysTVIE
 from .playtvak import PlaytvakIE
 from .playvid import PlayvidIE
 from .playwire import PlaywireIE
+from .plutotv import PlutoTVIE
 from .pluralsight import (
     PluralsightIE,
     PluralsightCourseIE,
@@ -1557,6 +1560,7 @@ from .weibo import (
     WeiboMobileIE
 )
 from .weiqitv import WeiqiTVIE
+from .wimtv import WimTVIE
 from .wistia import (
     WistiaIE,
     WistiaPlaylistIE,
@@ -1666,5 +1670,6 @@ from .zdf import ZDFIE, ZDFChannelIE
 from .zhihu import ZhihuIE
 from .zingmp3 import ZingMp3IE
 from .zee5 import Zee5IE
+from .zee5 import Zee5SeriesIE
 from .zoom import ZoomIE
 from .zype import ZypeIE

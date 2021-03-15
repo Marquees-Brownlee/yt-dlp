@@ -214,12 +214,11 @@ def parseOpts(overrideArguments=None):
         help='Mark videos watched (YouTube only)')
     general.add_option(
         '--no-mark-watched',
-        action='store_false', dest='mark_watched', default=False,
-        help='Do not mark videos watched')
+        action='store_false', dest='mark_watched',
+        help='Do not mark videos watched (default)')
     general.add_option(
         '--no-colors',
-        action='store_true', dest='no_color',
-        default=False,
+        action='store_true', dest='no_color', default=False,
         help='Do not emit color codes in output')
 
     network = optparse.OptionGroup(parser, 'Network Options')
@@ -558,6 +557,10 @@ def parseOpts(overrideArguments=None):
         help='Languages of the subtitles to download (optional) separated by commas, use --list-subs for available language tags')
 
     downloader = optparse.OptionGroup(parser, 'Download Options')
+    downloader.add_option(
+        '-N', '--concurrent-fragments',
+        dest='concurrent_fragment_downloads', metavar='N', default=1, type=int,
+        help='Number of fragments to download concurrently (default is %default)')
     downloader.add_option(
         '-r', '--limit-rate', '--rate-limit',
         dest='ratelimit', metavar='RATE',
@@ -1087,8 +1090,8 @@ def parseOpts(overrideArguments=None):
             'The supported executables are: SponSkrub, FFmpeg, FFprobe, and AtomicParsley. '
             'You can also specify "PP+EXE:ARGS" to give the arguments to the specified executable '
             'only when being used by the specified postprocessor. Additionally, for ffmpeg/ffprobe, '
-            'a number can be appended to the exe name seperated by "_i" to pass the argument '
-            'before the specified input file. Eg: --ppa "Merger+ffmpeg_i1:-v quiet". '
+            '"_i"/"_o" can be appended to the prefix optionally followed by a number to pass the argument '
+            'before the specified input/output file. Eg: --ppa "Merger+ffmpeg_i1:-v quiet". '
             'You can use this option multiple times to give different arguments to different '
             'postprocessors. (Alias: --ppa)'))
     postproc.add_option(
@@ -1179,6 +1182,17 @@ def parseOpts(overrideArguments=None):
         '--convert-subs', '--convert-subtitles',
         metavar='FORMAT', dest='convertsubtitles', default=None,
         help='Convert the subtitles to other format (currently supported: srt|ass|vtt|lrc)')
+    postproc.add_option(
+        '--split-chapters', '--split-tracks',
+        dest='split_chapters', action='store_true', default=False,
+        help=(
+            'Split video into multiple files based on internal chapters. '
+            'The "chapter:" prefix can be used with "--paths" and "--output" to '
+            'set the output filename for the split files. See "OUTPUT TEMPLATE" for details'))
+    postproc.add_option(
+        '--no-split-chapters', '--no-split-tracks',
+        dest='split_chapters', action='store_false',
+        help='Do not split video based on chapters (default)')
 
     sponskrub = optparse.OptionGroup(parser, 'SponSkrub (SponsorBlock) Options', description=(
         'SponSkrub (https://github.com/yt-dlp/SponSkrub) is a utility to mark/remove sponsor segments '
